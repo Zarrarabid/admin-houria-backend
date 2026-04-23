@@ -1,87 +1,6 @@
 const Employee = require('../models/employee.modal.js');
 
 
-
-// exports.addBulkEmployee = async (req, res) => {
-//     try {
-//         const { data, uploading_date } = req.body;
-
-//         if (!data || !Array.isArray(data) || data.length === 0) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "No data provided for bulk upload."
-//             });
-//         }
-
-//         if (!uploading_date) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Uploading date is required."
-//             });
-//         }
-
-//         // Map Excel headers → schema fields
-//         const mappedData = data.map((row, index) => {
-//             const falcon_id   = String(row["Falcon ID"] || "").trim();
-//             const name        = String(row["Name"] || "").trim();
-//             const category    = String(row["Type"] || "").trim();
-
-//             if (!falcon_id || !name || !category) {
-//                 throw new Error(
-//                     `Row ${index + 2}: Falcon ID, Name, and Type are required.`
-//                 );
-//             }
-
-//             return {
-//                 falcon_id,
-//                 name,
-//                 category,
-//                 online_orders:   Number(row["Online orders"])   || 0,
-//                 rate:            Number(row["Rate"])            || 0,
-//                 petrol:          Number(row["Petrol"])          || 0,
-//                 bonus_amount:    Number(row["Bonus AMT"])       || 0,
-//                 extra_kms_amount:Number(row["Extra KMS Amount"])|| 0,
-//                 violation:       Number(row["Quality Vaiolations"]) || 0,
-//                 total_deduction: Number(row["Total Deductions"]) || 0,
-//                 bike:            Number(row["Bike"])            || 0,
-//                 office:          Number(row["Office"])          || 0,
-//                 sim:             Number(row["Sim"])             || 0,
-//                 total:           Number(row["Total"])           || 0,
-//                 uploading_date:  new Date(uploading_date),
-//             };
-//         });
-
-//         // Insert all at once — ordered:false continues on duplicate errors
-//         const result = await Employee.insertMany(mappedData, { ordered: true });
-
-//         return res.status(200).json({
-//             success: true,
-//             message: `${result.length} employee(s) uploaded successfully.`,
-//             inserted: result.length,
-//         });
-
-//     } catch (error) {
-//         // insertMany partial-failure errors
-//         if (error.name === "BulkWriteError" || error.code === 11000) {
-//             return res.status(207).json({
-//                 success: false,
-//                 message: "Some records failed (possible duplicates).",
-//                 error: error.message,
-//             });
-//         }
-
-//         return res.status(500).json({
-//             success: false,
-//             message: error.message || "Bulk upload failed.",
-//         });
-//     }
-// };
-
-
-// @desc    Get all employees
-// @route   GET /api/employees
-// @access  Public
-
 exports.addBulkEmployee = async (req, res) => {
     try {
         const { data, uploading_date } = req.body;
@@ -174,13 +93,12 @@ exports.getAllEmployee = async (req, res) => {
             query.uploading_date = { $gte: startOfMonth, $lt: endOfMonth };
         }
 
+
         if (search) {
-            query = {
-                $or: [
-                    { name: { $regex: search, $options: 'i' } },
-                    { falcon_id: { $regex: search, $options: 'i' } },
-                ]
-            };
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { falcon_id: { $regex: search, $options: 'i' } }
+            ];
         }
 
         const totalEmployeeCount = await Employee.countDocuments(query)
@@ -189,12 +107,7 @@ exports.getAllEmployee = async (req, res) => {
         await Employee.find(query) :
         await Employee.find(query).limit(parseInt(limit))
             .skip(skip)
-            .sort({ createdAt: -1 });
-        // const baseUrl = `${process.env.backendURL}public/item_images/`;
-        // const itemWithImages = employees?.map(ele => ({
-        //     ...ele.toObject(),
-        //     imageUrl: ele.imageUrl ? `${baseUrl}${ele.imageUrl}` : ''
-        // }));
+            .sort({ createdAt: 1 });
         res.status(200).json(
             {
                 data: employees,
@@ -210,9 +123,6 @@ exports.getAllEmployee = async (req, res) => {
 };
 
 
-// @desc    Update an item
-// @route   PUT /api/items/:id
-// @access  Private/Admin, Manager
 exports.updateEmployeeRecord = async (req, res) => {
     const { 
         falcon_id,
