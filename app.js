@@ -30,6 +30,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 
 // Routes
+app.use('/api/merchandise', require('./routes/merchandiseRoutes'));
 app.use('/api/falcon_ids', require('./routes/falconIdsRoutes'));
 app.use('/api/employee', require('./routes/employeeRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
