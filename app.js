@@ -18,8 +18,8 @@ const app = express();
 app.use(express.json()); // Body parser for JSON
 
 const corsConfig = {
-  // origin: "https://admin-panel-frontend-lake.vercel.app",
-  origin: "http://localhost:5173",
+  origin: "https://houria-red.vercel.app/",
+  // origin: "http://localhost:5173",
   credentials: true,
 }
 app.options("", cors(corsConfig));
@@ -30,6 +30,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 
 // Routes
+app.use('/api/merchandise', require('./routes/merchandiseRoutes'));
 app.use('/api/falcon_ids', require('./routes/falconIdsRoutes'));
 app.use('/api/employee', require('./routes/employeeRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
