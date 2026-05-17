@@ -18,8 +18,8 @@ const app = express();
 app.use(express.json()); // Body parser for JSON
 
 const corsConfig = {
-  origin: "https://houria-red.vercel.app/",
-  // origin: "http://localhost:5173",
+  // origin: "https://houria-red.vercel.app",
+  origin: "http://localhost:5173",
   credentials: true,
 }
 app.options("", cors(corsConfig));
