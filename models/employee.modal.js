@@ -37,6 +37,11 @@ const EmployeeSchema = new mongoose.Schema({
         require: false,
         type: Number
     },
+    keeta: {
+        require: false,
+        type: Number,
+        default: 0
+    },
     total_deduction: {
         type: Number,
     },

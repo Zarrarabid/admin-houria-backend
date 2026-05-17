@@ -42,11 +42,12 @@ exports.addBulkEmployee = async (req, res) => {
                 bonus_amount: Number(row["Bonus AMT"]) || 0,
                 extra_kms_amount: Number(row["Extra KMS Amount"]) || 0,
                 violation: Number(row["Quality Vaiolations"]) || 0,
+                keeta: Number(row["Keeta"]) || 0,
                 total_deduction: Number(row["Total Deductions"]) || 0,
                 bike: Number(row["Bike"]) || 0,
                 office: Number(row["Office"]) || 0,
                 sim: Number(row["Sim"]) || 0,
-                total: Number(row["Total"]) || 0,
+                total: Number(row["Total"]).toFixed(2) || 0,
                 uploading_date: uploadDate,
             };
 
