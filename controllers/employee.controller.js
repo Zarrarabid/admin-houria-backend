@@ -182,3 +182,24 @@ exports.updateEmployeeRecord = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.getAllUploadingMonths = async (req, res) => {
+    try {
+
+        const months = await Employee.distinct("uploading_date");  // for unique months only
+            //     const months = await Employee.find({})
+            // .select("uploading_date -_id");
+
+        res.status(200).json({
+            success: true,
+            data: months
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+};
